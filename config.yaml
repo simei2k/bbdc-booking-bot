@@ -15,8 +15,8 @@ booking:
 
 telegram:
   enabled: True
-  token: "7370969996:AAE9fSlNd-cvuT2Ff8mvTT4iqSVureeZYJM"
-  chat_id: "-1002153047381"
+  token: ""
+  chat_id: ""
 
 months:
   month: "JUN'24"
