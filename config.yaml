@@ -1,19 +1,22 @@
 # config
 
 # interval in mins
-interval: 5
+interval: 1000000
 
 bbdc:
-  username: "your IC"
-  password: "your password"
+  username: ""
+  password: ""
 
 chromedriver:
   host: http://localhost:4444
 
 booking:
-  want_sessions: ["1", "7", "8"]
+  want_sessions: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 telegram:
   enabled: True
-  token: "16857xxxxx:AAFJ5A0uP5Mo78tL1rxxxxxxxxxxxx"
-  chat_id: "-5922xxxxx"
+  token: "7370969996:AAE9fSlNd-cvuT2Ff8mvTT4iqSVureeZYJM"
+  chat_id: "-1002153047381"
+
+months:
+  month: "JUN'24"

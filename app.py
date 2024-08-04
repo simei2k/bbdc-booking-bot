@@ -1,60 +1,40 @@
 import sys
+import time
 from selenium import webdriver
+from PIL import Image
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 # from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from config import load_config
-from bot import send_message
+from bot import send_message,send_photo,get_message,get_update
 import logging
+import base64
+import requests
+from checkwebpage import check_webpage, check_slots
+from bookslot import book_slot
 
 # setup logging
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
-
 def app(config):
-    # username password
-    username = config["bbdc"]["username"]
-    password = config["bbdc"]["password"]
-    # want sessions
-    want_sessions = config["booking"]["want_sessions"]
+    cservice = webdriver.ChromeService('C:/Users/lsywu/OneDrive/Documents/SMU/bbdc-booking-bot/chromedriver-win64/chromedriver.exe') 
+    browser = webdriver.Chrome(service = cservice)
+    #1. check whether webpage has element calendar
+    correct_webpage = check_webpage()
+    if correct_webpage:
+        checking = check_slots()
+        while checking == False:
+            #refreshing the page
+            browser.navigate().refresh()
+        book_slot()
+        #send_confirmation_msg()
+    else:
+        pass
 
-    # bot
-    bot_token = config["telegram"]["token"]
-    chat_id = config["telegram"]["chat_id"]
-    enable_bot = config["telegram"]["enabled"]
-
-    # chrome host
-    chrome_host = config["chromedriver"]["host"]
-
-    # connect to chrome
-    browser = webdriver.Remote(
-        '{:}/wd/hub'.format(chrome_host), DesiredCapabilities.CHROME)
-    browser.get('https://info.bbdc.sg/members-login/')
-
-    # login BBDC
-    idLogin = browser.find_element_by_id('txtNRIC')
-    idLogin.send_keys(username)
-    idLogin = browser.find_element_by_id('txtPassword')
-    idLogin.send_keys(password)
-    loginButton = browser.find_element_by_name('btnLogin')
-    loginButton.click()
-
-    # proceed unsure form (Chrome)
-    browser.switch_to.default_content()
-    wait = WebDriverWait(browser, 30)
-    wait.until(EC.visibility_of_element_located(
-        (By.ID, "proceed-button"))).click()
-
-    # Switching to Left Frame and accessing element by text
-    browser.switch_to.default_content()
-    frame = browser.find_element_by_name('leftFrame')
-    browser.switch_to.frame(frame)
-    nonFixedInstructor = browser.find_element_by_link_text(
-        'Booking without Fixed Instructor')
-    nonFixedInstructor.click()
 
     # Switching back to Main Frame and pressing 'I Accept'
     browser.switch_to.default_content()

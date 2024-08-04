@@ -4,12 +4,30 @@ from config import load_config
 
 def get_update(token):
     url = f"https://api.telegram.org/bot{token}/getUpdates"
-    return requests.get(url)
+    
+    parameters = {
+        'offset' : -1
+    }
+    update = requests.get(url,data=parameters)
+    return update
 
 
 def send_message(text, token, chat_id):
     url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}"
     return requests.get(url)
+
+def send_photo(photolocation,chat_id,token):
+    url = f"https://api.telegram.org/bot{token}/sendPhoto?chat_id={chat_id}"
+    files = {
+        'photo': open(photolocation,'rb')
+    }
+    resp = requests.get(url, files= files)
+    return resp
+
+def get_message(token,chat_id):
+    url = f"https://api.telegram.org/bot{token}/getUpdates?chat_id={chat_id}"
+    array = requests.get(url)
+    return array
 
 
 def test_bot():
